@@ -148,3 +148,45 @@ print(article.is_published())
 # Display cluster health
 print(connections.get_connection().cluster.health())
 ```
+
+After running the code
+
+```python
+GET /blog/_mapping?pretty
+
+```
+
+will produce something similar to
+
+```python
+{
+  "blog": {
+    "mappings": {
+      "properties": {
+        "body": {
+          "type": "text",
+          "analyzer": "snowball"
+        },
+        "lines": {
+          "type": "integer"
+        },
+        "published_from": {
+          "type": "date"
+        },
+        "tags": {
+          "type": "keyword"
+        },
+        "title": {
+          "type": "text",
+          "fields": {
+            "raw": {
+              "type": "keyword"
+            }
+          },
+          "analyzer": "snowball"
+        }
+      }
+    }
+  }
+}
+```
