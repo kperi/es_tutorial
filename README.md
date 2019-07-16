@@ -121,7 +121,7 @@ Elasticsearch supports various datatypes: text, integers, floats, doubles, datet
 ## Retrieving documents
 
 
-ES is can be considered as a key-value store (which in general is not a good idea).
+ES can be considered as a key-value store (which in general is not a good idea).
 
 Retrieving documents is as simple as 
 
@@ -155,7 +155,7 @@ GET /news/_count?q=title:oaknorth
 GET /news/_count
 {
     "query" : {
-        "term" : { "publisher" : "Finacial Times" }
+        "term" : { "publisher" : "Financial Times" }
     }
 } 
 

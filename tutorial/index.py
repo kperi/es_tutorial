@@ -29,7 +29,7 @@ class Article(Document):
 Article.init()
 
 # create and save and article
-article = Article(meta={'id': 42}, title='Hello world!', tags=['test'])
+article = Article(2, title='Hello world!', tags=['test'])
 article.body = ''' looong text '''
 article.published_from = datetime.now()
 article.save()

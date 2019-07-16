@@ -1,5 +1,4 @@
-from datetime import datetime
-from elasticsearch_dsl import Document, Date, Integer, Keyword, Text
+from elasticsearch_dsl import Document, Keyword, Text
 from elasticsearch_dsl.connections import connections
 
 # Define a default Elasticsearch client
@@ -13,7 +12,7 @@ class NewsArticle(Document):
     tags = Keyword()
 
     class Index:
-        name = "newsartice"
+        name = "newsarticle"
         settings = {"number_of_shards": 2}
 
 

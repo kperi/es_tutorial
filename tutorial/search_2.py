@@ -5,9 +5,9 @@ from elasticsearch_dsl import Q, A
 client = Elasticsearch()
 
 
-s = Search().using(client).query("match", title="Oaknorth")
+s = Search().using(client).query("match", title="dealing")
 for hit in s:
-    print(hit.meta.id, hit.title)
+    print(hit.meta.id, hit.title, hit.meta.score)
 
 print(100 * "*")
 
@@ -34,4 +34,3 @@ for hit in s:
     print(hit.meta.id, hit.title)
 
 print(100 * "*")
-
