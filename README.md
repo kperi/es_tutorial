@@ -16,6 +16,42 @@ We are using `elasticsearch_dsl`, https://elasticsearch-dsl.readthedocs.io/en/la
 
 
 
+## Terminology
+
+
+### Document
+
+A document is a basic unit of information that can be indexed. For example, you can have a document for a single customer, another document for a single product, and yet another for a single order. This document is expressed in JSON (JavaScript Object Notation) which is a ubiquitous internet data interchange format.
+
+
+
+### Shards and Replicas 
+
+An index can potentially store a large amount of data that can exceed the hardware limits of a single node. For example, a single index of a billion documents taking up 1TB of disk space may not fit on the disk of a single node or may be too slow to serve search requests from a single node alone.
+
+To solve this problem, Elasticsearch provides the ability to subdivide your index into multiple pieces called shards. When you create an index, you can simply define the number of shards that you want. Each shard is in itself a fully-functional and independent "index" that can be hosted on any node in the cluster.
+
+
+Sharding is important for two primary reasons:
+
+- It allows you to horizontally split/scale your content volume
+- It allows you to distribute and parallelize operations across shards (potentially on multiple nodes) thus increasing performance/throughput
+
+
+
+In a network/cloud environment where failures can be expected anytime, it is very useful and highly recommended to have a failover mechanism in case a shard/node somehow goes offline or disappears for whatever reason. To this end, Elasticsearch allows you to make one or more copies of your index’s shards into what are called replica shards, or replicas for short.
+
+Replication is important for two primary reasons:
+
+
+- It provides high availability in case a shard/node fails. For this reason, it is important to note that a replica shard is never allocated on the same node as the original/primary shard that it was copied from.
+- It allows you to scale out your search volume/throughput since searches can be executed on all replicas in parallel.
+
+
+
+To summarize, each index can be split into multiple shards. An index can also be replicated zero (meaning no replicas) or more times. Once replicated, each index will have primary shards (the original shards that were replicated from) and replica shards (the copies of the primary shards).
+
+
 
 ## Testing if ES is up & running ...
 
