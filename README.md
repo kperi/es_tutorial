@@ -90,8 +90,32 @@ GET twitter/_doc/0
  
 ## Searching
 
+```
+GET /news/_search?q=title:oaknorth
+```
+
+
+```
+GET /news,companies/_search?q=name:oaknorth
+```
 
 ## Counting 
+
+
+```
+GET /news/_count?q=title:oaknorth
+```
+
+```python 
+
+GET /news/_count
+{
+    "query" : {
+        "term" : { "publisher" : "Finacial Times" }
+    }
+} 
+
+```
 
 
 

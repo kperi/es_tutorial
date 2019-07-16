@@ -3,64 +3,62 @@ from elasticsearch_dsl import Document, Date, Integer, Keyword, Text
 from elasticsearch_dsl.connections import connections
 
 # Define a default Elasticsearch client
-connections.create_connection(hosts=['localhost'])
+connections.create_connection(hosts=["localhost"])
 
-class Article(Document):
-    title = Text(analyzer='snowball', fields={'raw': Keyword()})
-    body = Text(analyzer='snowball')
+
+class NewsArticle(Document):
+    title = Text(analyzer="snowball", fields={"raw": Keyword()})
+    body = Text(analyzer="snowball")
+    publisher = Keyword()
     tags = Keyword()
- 
 
     class Index:
-        name = 'blog'
-        settings = {
-          "number_of_shards": 2,
-        }
+        name = "newsartice"
+        settings = {"number_of_shards": 2}
 
-    def save(self, ** kwargs):
-        self.lines = len(self.body.split())
-        return super(Article, self).save(** kwargs)
-
-    def is_published(self):
-        return datetime.now() >= self.published_from
 
 # create the mappings in elasticsearch
-Article.init()
-
-# create and save and article
-article = Article(meta={'id': 42}, title='Hello world!', tags=['test'])
-article.body = ''' looong text '''
-article.published_from = datetime.now()
-article.save()
-article = Article.get(id=42)
-print(article.is_published())
+NewsArticle.init()
 
 
-# create and save and article
-article = Article(meta={'id': 43}, title="We are going to be using the Snowball analyser, for analysing text", tags=['test2'])
-article.body = ''' 
-The Snowball analyzer converts words into language and code set specific stem words.
+documents = [
+    [
+        "1",
+        "London-based lender OakNorth to double headcount amid deal with Dutch bank",
+        "British challenger bank OakNorth is on track to double its headcount after sealing a deal to provide small business loan technology to Dutch ",
+        "The Telegraph",
+        "Fintech",
+    ],
+    [
+        "2",
+        "OAKNORTH LENDS £19.5M TO CARE CONCERN GROUP TO SUPPORT ALPHA REAL CAPITAL OPERATING CARE HOMES",
+        "OakNorth Bank has provided a £19.5m loan to Care Concern Group, a UK-based care home operator. Founded in 1991 by Balbir Johal, Care Concern is a family-run business with numerous sites across the UK and a focus on general nursing and dementia care.",
+        "Business Leader",
+        ["Fintech", "Banking", "SME"],
+    ],
+    [
+        "3",
+        "SoftBank-backed lender OakNorth doubles staff, inks deal with X Bank",
+        "LONDON (Reuters) - British financial technology firm OakNorth has signed a five-year deal to provide its credit analysis and monitoring platform to D lender X Bank, OakNorth said on Tuesday in its first such agreement to be made public.",
+        "Reuters",
+        ["Fintech", "Banking"],
+    ],
+    [
+        "4",
+        "Tesla drops Standard Range versions of Model S and X",
+        "Tesla has discontinued the Standard Range versions of the Model S and Model X, effectively increasing the minimum price of each car by a few thousand dollars, reports Reuters. The company’s online configurator now only lists the Long Range and Performance models of each car as being available to order. ",
+        "theverge",
+        ["Self Driving Cars", "Tesla"],
+    ],
+]
 
-The Snowball analyzer is similar to the Standard analyzer except that is converts words to stem words.
+for id, title, body, publisher, tags in documents:
 
-The Snowball analyzer processes text characters in the following ways:
+    print(id, tags)
 
-Converts words to stem word tokens.
-Stopwords are not indexed.
-Converts alphabetical characters to lower case.
-Ignores colons, #, %, $, parentheses, and slashes.
-Indexes underscores, hyphens, @, and & symbols when they are part of words or numbers.
-Separately indexes numbers and words if numbers appear at the beginning of a word.
-Indexes numbers as part of the word if they are within or at the end of the word.
-Indexes apostrophes if they are in the middle of a word, but removes them if they are at the beginning or end of a word.
-Ignores an apostrophe followed by the letter s at the end of a word.
+    doc = NewsArticle(
+        meta={"id": id}, title=title, body=body, publisher=publisher, tags=tags
+    )
+    doc.save()
 
-'''
-article.published_from = datetime.now()
-article.save()
-article = Article.get(id=43)
-print(article.is_published())
-
-
-# Display cluster health
-print(connections.get_connection().cluster.health())
+# print(connections.get_connection().cluster.health())
